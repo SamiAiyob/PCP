@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
+    "corsheaders",
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -49,7 +51,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
+
+#REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': [
+#        'rest_framework.permissions.AllowAny']}
+
+
+#CORS_ORIGIN_ALLOW_ALL = True
+
+#this allow the cross-origin request to the react app
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -124,6 +139,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend', 'build', 'static'),
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
