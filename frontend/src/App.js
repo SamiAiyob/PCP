@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {
   CNavbar,
   CContainer,
@@ -24,61 +25,78 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+import ProgrammerForm from './components/ProgrammerForm';
+import ClientForm from './components/ClientForm';
+import ClientProfile from './components/ClientProfile';
+import ProgrammerProfile from './components/ProgrammerProfile';
+
 function App() {
   const [visible, setVisible] = useState(false);
 
   return (
-    <div className="App">
-      <CNavbar expand="lg" className="bg-body-tertiary">
-        <CContainer fluid>
-          <CNavbarBrand href="#">
-            <img src="/static/ddd.png" alt="" style={{ maxHeight: '100px' }} />
-          </CNavbarBrand>
-          <CNavbarToggler onClick={() => setVisible(!visible)} />
-          <CCollapse className="navbar-collapse" visible={visible}>
-            <CNavbarNav>
-              <CDropdown variant="nav-item" popper={false}>
-                <CDropdownToggle color="secondary">Our Team</CDropdownToggle>
-                <CDropdownMenu>
-                  <CDropdownItem href="#">Sami</CDropdownItem>
-                  <CDropdownItem href="#">Aj</CDropdownItem>
-                  <CDropdownItem href="#">Paula</CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-              <CDropdown variant="nav-item" popper={false}>
-                <CDropdownToggle color="secondary">Our Product</CDropdownToggle>
-                <CDropdownMenu>
-                  <CDropdownItem href="#">Find Work</CDropdownItem>
-                  <CDropdownItem href="#">Why P.C.P</CDropdownItem>
-                  <CDropdownItem href="#">News</CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
-            </CNavbarNav>
-            <CNavbarNav className="ms-auto">
-              <CForm className="d-flex me-3">
-                <CFormInput type="search" placeholder="Search" />
-                <CButton type="submit" color="success" variant="outline" className="ms-2">
-                  Search
-                </CButton>
-              </CForm>
-              <CNavItem>
-                <CButton color="primary" className="me-2">Login</CButton>
-              </CNavItem>
-              <CNavItem>
-                <CButton color="secondary">Sign up</CButton>
-              </CNavItem>
-            </CNavbarNav>
-          </CCollapse>
-        </CContainer>
-      </CNavbar>
+    <Router>
+      <div className="App">
+        <CNavbar expand="lg" className="bg-body-tertiary">
+          <CContainer fluid>
+            <CNavbarBrand href="#">
+              <img src="/static/ddd.png" alt="" style={{ maxHeight: '100px' }} />
+            </CNavbarBrand>
+            <CNavbarToggler onClick={() => setVisible(!visible)} />
+            <CCollapse className="navbar-collapse" visible={visible}>
+              <CNavbarNav>
+                <CDropdown variant="nav-item" popper={false}>
+                  <CDropdownToggle color="secondary">Our Team</CDropdownToggle>
+                  <CDropdownMenu>
+                    <CDropdownItem href="#">Sami</CDropdownItem>
+                    <CDropdownItem href="#">Aj</CDropdownItem>
+                    <CDropdownItem href="#">Paula</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
+                <CDropdown variant="nav-item" popper={false}>
+                  <CDropdownToggle color="secondary">Our Product</CDropdownToggle>
+                  <CDropdownMenu>
+                    <CDropdownItem href="#">Find Work</CDropdownItem>
+                    <CDropdownItem href="#">Why P.C.P</CDropdownItem>
+                    <CDropdownItem href="#">News</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
+              </CNavbarNav>
+              <CNavbarNav className="ms-auto">
+                <CForm className="d-flex me-3">
+                  <CFormInput type="search" placeholder="Search" />
+                  <CButton type="submit" color="success" variant="outline" className="ms-2">
+                    Search
+                  </CButton>
+                </CForm>
+                <CNavItem>
+                  <CButton color="primary" className="me-2">Login</CButton>
+                </CNavItem>
+                <CNavItem>
+                  <CButton color="secondary">Sign up</CButton>
+                </CNavItem>
+              </CNavbarNav>
+            </CCollapse>
+          </CContainer>
+        </CNavbar>
 
-      <div className="main-content">
-        <MDBContainer>
-          <MarketingMessage />
-          <Categories />
-        </MDBContainer>
+        <div className="main-content">
+          <MDBContainer>
+            <Routes>
+              <Route path="/" element={
+                <>
+                  <MarketingMessage />
+                  <Categories />
+                </>
+              } />
+              <Route path="/register-programmer" element={<ProgrammerForm />} />
+              <Route path="/programmer-profile/:id" element={<ProgrammerProfile />} />
+              <Route path="/register-client" element={<ClientForm />} />
+              <Route path="/client-profile/:id" element={<ClientProfile />} />
+            </Routes>
+          </MDBContainer>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
@@ -137,41 +155,41 @@ function MarketingMessage() {
 
 function Categories() {
   const categories = [
-    { 
-      id: 1, 
-      name: "Development and IT", 
-      buttonText: ["JavaScript", "Python", "Java", "C#", "C++"].join(", "), 
-      icon: <FaCode /> 
+    {
+      id: 1,
+      name: "Development and IT",
+      buttonText: ["JavaScript", "Python", "Java", "C#", "C++"].join(", "),
+      icon: <FaCode />
     },
-    { 
-      id: 2, 
-      name: "AI Services", 
-      buttonText: ["Python", "Java", "R", "Scala"].join(", "), 
-      icon: <FaRobot /> 
+    {
+      id: 2,
+      name: "AI Services",
+      buttonText: ["Python", "Java", "R", "Scala"].join(", "),
+      icon: <FaRobot />
     },
-    { 
-      id: 3, 
-      name: "Design and Creative", 
-      buttonText: ["Photoshop", "Illustrator", "InDesign"].join(", "), 
-      icon: <FaPalette /> 
+    {
+      id: 3,
+      name: "Design and Creative",
+      buttonText: ["Photoshop", "Illustrator", "InDesign"].join(", "),
+      icon: <FaPalette />
     },
-    { 
-      id: 4, 
-      name: "Mobile Development", 
-      buttonText: ["Swift", "React Native", "Flutter"].join(", "), 
-      icon: <FaMobileAlt /> 
+    {
+      id: 4,
+      name: "Mobile Development",
+      buttonText: ["Swift", "React Native", "Flutter"].join(", "),
+      icon: <FaMobileAlt />
     },
-    { 
-      id: 5, 
-      name: "Cloud Computing", 
-      buttonText: ["AWS", "Google Cloud", "IBM Cloud"].join(", "), 
-      icon: <FaCloud /> 
+    {
+      id: 5,
+      name: "Cloud Computing",
+      buttonText: ["AWS", "Google Cloud", "IBM Cloud"].join(", "),
+      icon: <FaCloud />
     },
-    { 
-      id: 6, 
-      name: "Data Science", 
-      buttonText: ["Python", "R", "SQL", "Scala"].join(", "), 
-      icon: <FaDatabase /> 
+    {
+      id: 6,
+      name: "Data Science",
+      buttonText: ["Python", "R", "SQL", "Scala"].join(", "),
+      icon: <FaDatabase />
     },
   ];
 
