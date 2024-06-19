@@ -33,14 +33,27 @@ const ClientForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = new FormData();
+
+        // Append user data as a nested object
+        const user = {
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+        };
+
+        form.append('user', JSON.stringify(user)); // Append user object as JSON string
+
+        // Append other form data
         for (let key in formData) {
-            if (formData[key] !== null) {
-                form.append(key, formData[key]);
+            if (key !== 'name' && key !== 'email' && key !== 'password') {
+                if (formData[key] !== null) {
+                    form.append(key, formData[key]);
+                }
             }
         }
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/client/', form, {
+            const response = await axios.post('http://127.0.0.1:8000/clients/', form, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

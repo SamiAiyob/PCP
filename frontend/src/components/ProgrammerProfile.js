@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     CCard,
     CCardBody,
@@ -19,6 +19,7 @@ import {
 
 const ProgrammerProfile = () => {
     const { id } = useParams(); // Retrieve programmer ID from URL params
+    const navigate = useNavigate();
     const [programmerData, setProgrammerData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -29,17 +30,32 @@ const ProgrammerProfile = () => {
         phone_number: '',
         address: '',
         experience: 0,
-        sector: '',
+        rate: 0,
+        category_id: '',
         skills: '',
-        bio: ''
+        bio: '',
+        profile_picture: null,
+        cv: null
     });
 
     useEffect(() => {
         const fetchProgrammerData = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/programmer/${id}/`);
+                const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`);
                 setProgrammerData(response.data);
-                setFormData(response.data); // Set form data with existing programmer data
+                setFormData({
+                    name: response.data.user.name,
+                    email: response.data.user.email,
+                    phone_number: response.data.phone_number,
+                    address: response.data.address,
+                    experience: response.data.experience,
+                    rate: response.data.rate,
+                    category_id: response.data.category ? response.data.category.id : '',
+                    skills: response.data.skills,
+                    bio: response.data.bio,
+                    profile_picture: response.data.profile_picture,
+                    cv: response.data.cv
+                });
                 setLoading(false);
             } catch (error) {
                 setError(error);
@@ -54,8 +70,8 @@ const ProgrammerProfile = () => {
         const confirmDelete = window.confirm('Are you sure you want to delete your profile?');
         if (confirmDelete) {
             try {
-                await axios.delete(`http://127.0.0.1:8000/programmer/${id}/`);
-                // Redirect or show a success message after deletion
+                await axios.delete(`http://127.0.0.1:8000/programmers/${id}/`);
+                navigate('/'); // Redirect to home or another page after deletion
             } catch (error) {
                 setError(error);
             }
@@ -70,13 +86,38 @@ const ProgrammerProfile = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleFileChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData); // Log form data
+        const form = new FormData();
+        const user = {
+            name: formData.name,
+            email: formData.email
+        };
+
+        form.append('user', JSON.stringify(user)); // Append user object as JSON string
+
+        for (let key in formData) {
+            if (key !== 'name' && key !== 'email') {
+                if (formData[key] !== null) {
+                    form.append(key, formData[key]);
+                }
+            }
+        }
+
         try {
-            await axios.put(`http://127.0.0.1:8000/programmer/${id}/`, formData);
+            await axios.put(`http://127.0.0.1:8000/programmers/${id}/`, form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             setEditing(false);
-            // Show success message or redirect to profile page
+            // Optionally refetch programmer data
+            const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`);
+            setProgrammerData(response.data);
         } catch (error) {
             console.error('Error response:', error.response.data); // Log server response
             setError(error);
@@ -106,10 +147,6 @@ const ProgrammerProfile = () => {
                                         <CFormInput type="email" id="email" name="email" value={formData.email} onChange={handleChange} />
                                     </div>
                                     <div className="mb-3">
-                                        <CFormLabel htmlFor="password">Password</CFormLabel>
-                                        <CFormInput type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
-                                    </div>
-                                    <div className="mb-3">
                                         <CFormLabel htmlFor="phone_number">Phone Number</CFormLabel>
                                         <CFormInput type="text" id="phone_number" name="phone_number" value={formData.phone_number} onChange={handleChange} />
                                     </div>
@@ -122,8 +159,8 @@ const ProgrammerProfile = () => {
                                         <CFormInput type="number" id="experience" name="experience" value={formData.experience} onChange={handleChange} />
                                     </div>
                                     <div className="mb-3">
-                                        <CFormLabel htmlFor="sector">Sector</CFormLabel>
-                                        <CFormInput type="text" id="sector" name="sector" value={formData.sector} onChange={handleChange} />
+                                        <CFormLabel htmlFor="rate">Rate</CFormLabel>
+                                        <CFormInput type="number" id="rate" name="rate" value={formData.rate} onChange={handleChange} min={1} max={10} />
                                     </div>
                                     <div className="mb-3">
                                         <CFormLabel htmlFor="skills">Skills</CFormLabel>
@@ -132,6 +169,10 @@ const ProgrammerProfile = () => {
                                     <div className="mb-3">
                                         <CFormLabel htmlFor="bio">Bio</CFormLabel>
                                         <CFormTextarea id="bio" name="bio" value={formData.bio} onChange={handleChange} />
+                                    </div>
+                                    <div className="mb-3">
+                                        <CFormLabel htmlFor="cv">CV</CFormLabel>
+                                        <CFormInput type="file" id="cv" name="cv" onChange={handleFileChange} />
                                     </div>
                                     <CButton type="submit" color="primary">Update</CButton>
                                 </CForm>
@@ -144,15 +185,18 @@ const ProgrammerProfile = () => {
                                             style={{ width: '150px', height: '150px', borderRadius: '50%' }}
                                         />
                                     )}
-                                    <p><strong>Name:</strong> {programmerData.name}</p>
-                                    <p><strong>Email:</strong> {programmerData.email}</p>
+                                    <p><strong>Name:</strong> {programmerData.user.name}</p>
+                                    <p><strong>Email:</strong> {programmerData.user.email}</p>
                                     <p><strong>Phone Number:</strong> {programmerData.phone_number}</p>
                                     <p><strong>Address:</strong> {programmerData.address}</p>
                                     <p><strong>Experience:</strong> {programmerData.experience} years</p>
+                                    <p><strong>Rate:</strong> ${programmerData.rate} per hour</p>
                                     <p><strong>Category:</strong> {programmerData.categories ? programmerData.categories.name : 'N/A'}</p>
-                                    <p><strong>Sector:</strong> {programmerData.sector}</p>
                                     <p><strong>Skills:</strong> {programmerData.skills}</p>
                                     <p><strong>Bio:</strong> {programmerData.bio}</p>
+                                    {programmerData.cv && (
+                                        <p><strong>CV:</strong> <a href={programmerData.cv} target="_blank" rel="noopener noreferrer">Download CV</a></p>
+                                    )}
                                     <CButton color="info" onClick={handleEdit}>Edit Profile</CButton> <br/><br/>
                                     <CButton color="danger" onClick={handleDelete}>Delete Profile</CButton>
                                 </div>

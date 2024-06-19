@@ -6,7 +6,24 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+
 class ProgrammerSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     profile_picture = serializers.ImageField(max_length=None, use_url=True, required=False)
     categories = CategorySerializer(read_only=True)
     category_id = serializers.PrimaryKeyRelatedField(
@@ -15,7 +32,31 @@ class ProgrammerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Programmer
-        fields = '__all__'
+        fields = ['user', 'phone_number', 'address', 'experience', 'rate', 'categories', 'category_id', 'skills', 'bio', 'profile_picture', 'cv']
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user_serializer = UserSerializer(data=user_data)
+        user_serializer.is_valid(raise_exception=True)
+        user = user_serializer.save()
+        validated_data['user'] = user
+        return super().create(validated_data)
+
+class ClientSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    profile_picture = serializers.ImageField(max_length=None, use_url=True, required=False)
+
+    class Meta:
+        model = Client
+        fields = ['user', 'phone_number', 'address', 'bio', 'profile_picture']
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user_serializer = UserSerializer(data=user_data)
+        user_serializer.is_valid(raise_exception=True)
+        user = user_serializer.save()
+        validated_data['user'] = user
+        return super().create(validated_data)
 
 class WebDeveloperSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,11 +86,4 @@ class CloudServicesSerializer(serializers.ModelSerializer):
 class AdminCustomerSupportSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdminCustomerSupport
-        fields = '__all__'
-
-class ClientSerializer(serializers.ModelSerializer):
-    profile_picture = serializers.ImageField(max_length=None, use_url=True, required=False)
-
-    class Meta:
-        model = Client
         fields = '__all__'

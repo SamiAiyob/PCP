@@ -1,44 +1,44 @@
 import React, { useState } from 'react';
-import { CNavbar, CContainer, CNavbarBrand, CNavbarToggler, CCollapse, CNavbarNav, CDropdown, CDropdownToggle, CDropdownMenu, CDropdownItem, CForm, CFormInput, CButton } from '@coreui/react';
-import MultilevelDropdown from 'react-multilevel-dropdown'; // Make sure to import the MultilevelDropdown component.
+import {
+  CNavbar,
+  CContainer,
+  CNavbarBrand,
+  CNavbarToggler,
+  CCollapse,
+  CNavbarNav,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
+  CButton,
+  CForm,
+  CFormInput
+} from '@coreui/react';
+import { Link, useNavigate } from 'react-router-dom';
+import MultilevelDropdown from 'react-multilevel-dropdown';
 
 function Navbar({ visible, setVisible }) {
   const items = [
-    { 
+    {
       title: 'Our Team',
       submenu: [
-        { 
-          title: 'Sami', 
-          submenu: [
-            { title: 'Samiiiiii jijiji '},
-
-          ]
-        },
-        { 
-          title: 'Aj', 
-          submenu: [
-            { title: 'Aj jajajja '},
-          ]
-        },
-        { 
-          title: 'Paula', 
-          submenu: [
-            { title: 'Paula jojojojo '},
-          ]
-        }
+        { title: 'Sami' },
+        { title: 'Aj' },
+        { title: 'Paula' }
       ]
     },
-    { 
+    {
       title: 'Our Product',
       submenu: [
         { title: 'Find Work' },
         { title: 'Why P.C.P' },
-        { title: 'News'}
+        { title: 'News' }
       ]
     }
   ];
-  
+
   const [signupDropdownOpen, setSignupDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleSignupDropdown = () => {
     setSignupDropdownOpen(!signupDropdownOpen);
@@ -48,19 +48,18 @@ function Navbar({ visible, setVisible }) {
     <CNavbar expand="lg" className="bg-body-tertiary">
       <CContainer fluid>
         <CNavbarBrand href="#">
-          <img src="/static/d.png" alt="" style={{ maxHeight: '140px' }} />
+          <img src="/static/d.png" alt="" style={{ maxHeight: '80px' }} />
         </CNavbarBrand>
         <CNavbarToggler onClick={() => setVisible(!visible)} />
         <CCollapse className="navbar-collapse" visible={visible}>
           <CNavbarNav>
-            <MultilevelDropdown 
-              title="Our Team" 
-              items={items[0].submenu} 
-            />
-            <MultilevelDropdown 
-              title="Our Product" 
-              items={items[1].submenu} 
-            />
+            {items.map((item, index) => (
+              <MultilevelDropdown
+                key={index}
+                title={item.title}
+                items={item.submenu}
+              />
+            ))}
           </CNavbarNav>
           <CNavbarNav className="ms-auto">
             <CForm className="d-flex me-3">
@@ -72,11 +71,15 @@ function Navbar({ visible, setVisible }) {
             <CDropdown isOpen={signupDropdownOpen} toggle={toggleSignupDropdown}>
               <CDropdownToggle color="secondary">Sign up</CDropdownToggle>
               <CDropdownMenu>
-                <CDropdownItem onClick={() => console.log("Programador clicked")}>Programmers </CDropdownItem>
-                <CDropdownItem onClick={() => console.log("Cliente clicked")}>Clients</CDropdownItem>
+                <CDropdownItem>
+                  <Link to="/register-programmer">Programmers</Link>
+                </CDropdownItem>
+                <CDropdownItem>
+                  <Link to="/register-client">Clients</Link>
+                </CDropdownItem>
               </CDropdownMenu>
             </CDropdown>
-            <CButton color="primary" className="me-2" onClick={() => console.log("Login clicked")}>
+            <CButton color="primary" className="me-2" onClick={() => navigate('/login')}>
               Login
             </CButton>
           </CNavbarNav>

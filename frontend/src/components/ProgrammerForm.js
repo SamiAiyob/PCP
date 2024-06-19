@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { CFormInput, CForm, CCol, CButton, CFormCheck, CFormFeedback, CFormSelect, CFormTextarea } from '@coreui/react';
+import { CFormInput, CForm, CCol, CButton, CFormCheck, CFormSelect, CFormTextarea, CFormFeedback } from '@coreui/react';
 
 const ProgrammerForm = () => {
     const navigate = useNavigate();
@@ -12,11 +12,12 @@ const ProgrammerForm = () => {
         phone_number: '',
         address: '',
         experience: '',
+        rate: '',  // New field for rate
         category_id: '',
-        sector: 'AI/MachineLearning',
         skills: '',
         bio: '',
         profile_picture: null,
+        cv: null  // New field for CV
     });
 
     const [categories, setCategories] = useState([]);
@@ -48,27 +49,39 @@ const ProgrammerForm = () => {
     const handleFileChange = (e) => {
         setFormData({
             ...formData,
-            profile_picture: e.target.files[0],
+            [e.target.name]: e.target.files[0],
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = new FormData();
+
+        // Append user data as a nested object
+        const user = {
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+        };
+
+        form.append('user', JSON.stringify(user)); // Append user object as JSON string
+
+        // Append other form data
         for (let key in formData) {
-            if (formData[key] !== null) {
-                form.append(key, formData[key]);
+            if (key !== 'name' && key !== 'email' && key !== 'password') {
+                if (formData[key] !== null) {
+                    form.append(key, formData[key]);
+                }
             }
         }
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/programmer/', form, {
+            const response = await axios.post('http://127.0.0.1:8000/programmers/', form, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log(response.data);
-            navigate(`/programmer-profile/${response.data.id}`); // Redirect to programmer profile page
+            navigate(`/programmer-profile/${response.data.id}`);
         } catch (error) {
             console.error('Error submitting form:', error);
             if (error.response) {
@@ -140,6 +153,17 @@ const ProgrammerForm = () => {
                         />
                     </CCol>
                     <CCol md={6}>
+                        <CFormInput
+                            type="number"
+                            id="inputRate"
+                            label="Rate"
+                            name="rate"
+                            onChange={handleChange}
+                            min={10}  // Minimum value for rate
+                            max={100} // Maximum value for rate
+                        />
+                    </CCol>
+                    <CCol md={12}>
                         <CFormSelect
                             id="inputCategories"
                             label="Categories"
@@ -154,27 +178,12 @@ const ProgrammerForm = () => {
                             ))}
                         </CFormSelect>
                     </CCol>
-                    <CCol md={12}>
-                        <CFormSelect
-                            id="inputSector"
-                            label="Sector"
-                            name="sector"
-                            onChange={handleChange}
-                        >
-                            <option value="WebDeveloper">WebDeveloper</option>
-                            <option value="BackendDeveloper">BackendDeveloper</option>
-                            <option value="Networking">Networking</option>
-                            <option value="AI/MachineLearning">AI/Machine Learning</option>
-                            <option value="CloudServices">Cloud Services</option>
-                            <option value="Admin/CustomerSupport">Administration/Customer Support</option>
-                        </CFormSelect>
-                    </CCol>
                     <CCol xs={12}>
                         <CFormInput
                             id="inputSkills"
                             label="Skills"
                             name="skills"
-                            placeholder="List your skills"
+                            placeholder="e.g Python/Django"
                             onChange={handleChange}
                         />
                     </CCol>
@@ -193,6 +202,14 @@ const ProgrammerForm = () => {
                         <input
                             type="file"
                             name="profile_picture"
+                            onChange={handleFileChange}
+                        />
+                    </CCol>
+                    <CCol xs={12}>
+                        <label>CV:</label>
+                        <input
+                            type="file"
+                            name="cv"
                             onChange={handleFileChange}
                         />
                     </CCol>
