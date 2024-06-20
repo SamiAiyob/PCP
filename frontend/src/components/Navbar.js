@@ -135,7 +135,7 @@ const Navbar = ({ visible, setVisible }) => {
                 <CDropdownItem onClick={() => navigate('/register-client')}>Client</CDropdownItem>
               </CDropdownMenu>
             </CDropdown>
-            <CButton color="primary" className="me-2" onClick={() => navigate('/login')}>
+            <CButton style={{ backgroundColor: '#1d899a' }} className="me-2" onClick={() => navigate('/login')}>
               Login
             </CButton>
           </CNavbarNav>

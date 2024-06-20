@@ -143,7 +143,7 @@ const ClientForm = () => {
                     <CFormFeedback invalid>You must agree before submitting.</CFormFeedback>
                 </CCol>
                 <CCol xs={12}>
-                    <CButton color="primary" type="submit">Submit form</CButton>
+                    <CButton style={{ backgroundColor: '#1d899a' }} type="submit">Submit form</CButton>
                 </CCol>
             </CForm>
         </div>
