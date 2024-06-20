@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 import Navbar from './components/Navbar';
+import SearchResults from './components/SearchResults';
 import MarketingMessage from './components/MarketingMessage';
 import Categories from './components/Categories';
 import ProgrammerForm from './components/ProgrammerForm';
@@ -28,6 +29,7 @@ function App() {
           <MDBContainer>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/search-results" element={<SearchResults />} />
               <Route path="/register-programmer" element={<ProgrammerForm />} />
               <Route path="/programmer-profile/:id" element={<ProgrammerProfile />} />
               <Route path="/programmer-list" element={<ProgrammerList />} />

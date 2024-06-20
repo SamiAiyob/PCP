@@ -11,10 +11,9 @@ import {
   CDropdownToggle,
   CDropdownMenu,
   CDropdownItem,
-  CForm,
-  CFormInput,
   CButton
 } from '@coreui/react';
+import Search from './search';
 import '../App.css';
 
 const menuItems = [
@@ -122,12 +121,7 @@ const Navbar = ({ visible, setVisible }) => {
             </CDropdown>
           </CNavbarNav>
           <CNavbarNav className="ms-auto">
-            <CForm className="d-flex me-3">
-              <CFormInput type="search" placeholder="Search" />
-              <CButton type="submit" color="success" variant="outline" className="ms-2">
-                Search
-              </CButton>
-            </CForm>
+          <Search />
             <CDropdown>
               <CDropdownToggle color="secondary">Sign up</CDropdownToggle>
               <CDropdownMenu>

@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import AllowAny
 from .models import *
 from .serializer import *
 import jwt, datetime
@@ -138,3 +139,14 @@ class LogoutView(APIView):
         response.delete_cookie('jwt')
         response.data = {'message': 'success logout'}
         return response
+    
+class PublicProgrammerSearchView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        query = request.query_params.get('q', '')
+        if query:
+            programmers = Programmer.objects.filter(skills__icontains=query)
+            serializer = PublicProgrammerSerializer(programmers, many=True)
+            return Response(serializer.data)
+        return Response({"message": "No search query provided."}, status=400)

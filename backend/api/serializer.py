@@ -57,6 +57,13 @@ class ClientSerializer(serializers.ModelSerializer):
         user = user_serializer.save()
         validated_data['user'] = user
         return super().create(validated_data)
+    
+class PublicProgrammerSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='user.username')
+
+    class Meta:
+        model = Programmer
+        fields = ['name', 'skills', 'categories', 'profile_picture']
 
 class WebDeveloperSerializer(serializers.ModelSerializer):
     class Meta:
