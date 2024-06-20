@@ -3,12 +3,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import { MDBContainer } from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 import Navbar from './components/Navbar';
 import MarketingMessage from './components/MarketingMessage';
 import Categories from './components/Categories';
 import ProgrammerForm from './components/ProgrammerForm';
+import ProgrammerList from './components/ProgrammerList';
 import ClientForm from './components/ClientForm';
 import ClientProfile from './components/ClientProfile';
 import ProgrammerProfile from './components/ProgrammerProfile';
@@ -28,6 +30,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/register-programmer" element={<ProgrammerForm />} />
               <Route path="/programmer-profile/:id" element={<ProgrammerProfile />} />
+              <Route path="/programmer-list" element={<ProgrammerList />} />
               <Route path="/register-client" element={<ClientForm />} />
               <Route path="/client-profile/:id" element={<ClientProfile />} />
               <Route path="/login" element={<Login />} />

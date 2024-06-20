@@ -5,9 +5,6 @@ import {
     CCard,
     CCardBody,
     CCardHeader,
-    CCol,
-    CContainer,
-    CRow,
     CButton,
     CForm,
     CFormLabel,
@@ -128,84 +125,91 @@ const ProgrammerProfile = () => {
     if (error) return <CAlert color="danger">Error loading programmer data: {error.message}</CAlert>;
 
     return (
-        <CContainer>
-            <CRow>
-                <CCol md="20" className="mx-auto mt-4">
-                    <CCard style={{ width: '40rem' }}>
-                        <CCardHeader>
-                            <h1>Programmer Profile</h1>
-                        </CCardHeader>
-                        <CCardBody>
-                            {editing ? (
-                                <CForm onSubmit={handleSubmit}>
-                                    <div className="mb-3">
-                                        <CFormLabel htmlFor="name">Full Name</CFormLabel>
-                                        <CFormInput type="text" id="name" name="name" value={formData.name} onChange={handleChange} />
+        <div className="bg-c-lite-green py-4 d-flex justify-content-center align-items-center min-vh-100">
+            <div className="container">
+                <div className="row justify-content-center">
+                    <div className="col-md-8">
+                        <CCard>
+                            <CCardHeader>
+                                <h1>Programmer Profile</h1>
+                            </CCardHeader>
+                            <CCardBody>
+                                {editing ? (
+                                    <CForm onSubmit={handleSubmit}>
+                                        <div className="mb-3">
+                                            <CFormLabel htmlFor="name">Full Name</CFormLabel>
+                                            <CFormInput type="text" id="name" name="name" value={formData.name} onChange={handleChange} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <CFormLabel htmlFor="email">Email</CFormLabel>
+                                            <CFormInput type="email" id="email" name="email" value={formData.email} onChange={handleChange} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <CFormLabel htmlFor="phone_number">Phone Number</CFormLabel>
+                                            <CFormInput type="text" id="phone_number" name="phone_number" value={formData.phone_number} onChange={handleChange} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <CFormLabel htmlFor="address">Address</CFormLabel>
+                                            <CFormInput type="text" id="address" name="address" value={formData.address} onChange={handleChange} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <CFormLabel htmlFor="experience">Experience</CFormLabel>
+                                            <CFormInput type="number" id="experience" name="experience" value={formData.experience} onChange={handleChange} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <CFormLabel htmlFor="rate">Rate</CFormLabel>
+                                            <CFormInput type="number" id="rate" name="rate" value={formData.rate} onChange={handleChange} min={1} max={10} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <CFormLabel htmlFor="skills">Skills</CFormLabel>
+                                            <CFormInput type="text" id="skills" name="skills" value={formData.skills} onChange={handleChange} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <CFormLabel htmlFor="bio">Bio</CFormLabel>
+                                            <CFormTextarea id="bio" name="bio" value={formData.bio} onChange={handleChange} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <CFormLabel htmlFor="cv">CV</CFormLabel>
+                                            <CFormInput type="file" id="cv" name="cv" onChange={handleFileChange} />
+                                        </div>
+                                        <CButton type="submit" color="primary">Update</CButton>
+                                    </CForm>
+                                ) : (
+                                    <div>
+                                        {programmerData.profile_picture && (
+                                            <div className="text-center mb-4">
+                                                <img
+                                                    src={programmerData.profile_picture}
+                                                    alt={`${programmerData.user.name}'s profile`}
+                                                    className="img-fluid rounded-circle mb-3"
+                                                    style={{ width: '150px', height: '150px' }}
+                                                />
+                                            </div>
+                                        )}
+                                        <h3 className="text-center mb-3">{programmerData.user.name}</h3>
+                                        <p className="text-center mb-1"><strong>Email:</strong> {programmerData.user.email}</p>
+                                        <p className="text-center mb-1"><strong>Experience:</strong> {programmerData.experience} years</p>
+                                        <p className="text-center mb-1"><strong>Rate:</strong> ${programmerData.rate} per hour</p>
+                                        <p className="text-center mb-1"><strong>Category:</strong> {programmerData.categories ? programmerData.categories.name : 'N/A'}</p>
+                                        <h5 className="text-center mt-4 mb-3">Skills</h5>
+                                        <p className="text-muted mb-4">{programmerData.skills}</p>
+                                        <h5 className="text-center mb-3">Bio</h5>
+                                        <p className="text-muted">{programmerData.bio}</p>
+                                        {programmerData.cv && (
+                                            <p className="text-center"><strong>CV:</strong> <a href={programmerData.cv} target="_blank" rel="noopener noreferrer">Download CV</a></p>
+                                        )}
+                                        <div className="text-center">
+                                            <CButton color="info" onClick={handleEdit} className="me-2">Edit Profile</CButton>
+                                            <CButton color="danger" onClick={handleDelete}>Delete Profile</CButton>
+                                        </div>
                                     </div>
-                                    <div className="mb-3">
-                                        <CFormLabel htmlFor="email">Email</CFormLabel>
-                                        <CFormInput type="email" id="email" name="email" value={formData.email} onChange={handleChange} />
-                                    </div>
-                                    <div className="mb-3">
-                                        <CFormLabel htmlFor="phone_number">Phone Number</CFormLabel>
-                                        <CFormInput type="text" id="phone_number" name="phone_number" value={formData.phone_number} onChange={handleChange} />
-                                    </div>
-                                    <div className="mb-3">
-                                        <CFormLabel htmlFor="address">Address</CFormLabel>
-                                        <CFormInput type="text" id="address" name="address" value={formData.address} onChange={handleChange} />
-                                    </div>
-                                    <div className="mb-3">
-                                        <CFormLabel htmlFor="experience">Experience</CFormLabel>
-                                        <CFormInput type="number" id="experience" name="experience" value={formData.experience} onChange={handleChange} />
-                                    </div>
-                                    <div className="mb-3">
-                                        <CFormLabel htmlFor="rate">Rate</CFormLabel>
-                                        <CFormInput type="number" id="rate" name="rate" value={formData.rate} onChange={handleChange} min={1} max={10} />
-                                    </div>
-                                    <div className="mb-3">
-                                        <CFormLabel htmlFor="skills">Skills</CFormLabel>
-                                        <CFormInput type="text" id="skills" name="skills" value={formData.skills} onChange={handleChange} />
-                                    </div>
-                                    <div className="mb-3">
-                                        <CFormLabel htmlFor="bio">Bio</CFormLabel>
-                                        <CFormTextarea id="bio" name="bio" value={formData.bio} onChange={handleChange} />
-                                    </div>
-                                    <div className="mb-3">
-                                        <CFormLabel htmlFor="cv">CV</CFormLabel>
-                                        <CFormInput type="file" id="cv" name="cv" onChange={handleFileChange} />
-                                    </div>
-                                    <CButton type="submit" color="primary">Update</CButton>
-                                </CForm>
-                            ) : (
-                                <div>
-                                    {programmerData.profile_picture && (
-                                        <img
-                                            src={programmerData.profile_picture}
-                                            alt="Profile"
-                                            style={{ width: '150px', height: '150px', borderRadius: '50%' }}
-                                        />
-                                    )}
-                                    <p><strong>Name:</strong> {programmerData.user.name}</p>
-                                    <p><strong>Email:</strong> {programmerData.user.email}</p>
-                                    <p><strong>Phone Number:</strong> {programmerData.phone_number}</p>
-                                    <p><strong>Address:</strong> {programmerData.address}</p>
-                                    <p><strong>Experience:</strong> {programmerData.experience} years</p>
-                                    <p><strong>Rate:</strong> ${programmerData.rate} per hour</p>
-                                    <p><strong>Category:</strong> {programmerData.categories ? programmerData.categories.name : 'N/A'}</p>
-                                    <p><strong>Skills:</strong> {programmerData.skills}</p>
-                                    <p><strong>Bio:</strong> {programmerData.bio}</p>
-                                    {programmerData.cv && (
-                                        <p><strong>CV:</strong> <a href={programmerData.cv} target="_blank" rel="noopener noreferrer">Download CV</a></p>
-                                    )}
-                                    <CButton color="info" onClick={handleEdit}>Edit Profile</CButton> <br/><br/>
-                                    <CButton color="danger" onClick={handleDelete}>Delete Profile</CButton>
-                                </div>
-                            )}
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-            </CRow>
-        </CContainer>
+                                )}
+                            </CCardBody>
+                        </CCard>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 };
 
