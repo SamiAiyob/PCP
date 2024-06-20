@@ -291,3 +291,37 @@ p {
 .text-muted {
   color: #919aa3;
 }
+/* Login and select user type*/
+.custom-button {
+  background-color: #1d899a; 
+  border-color: #1d899a; 
+  color: white; 
+}
+
+.custom-link {
+  color: #1d899a; 
+
+}
+
+.custom-link:hover {
+  color: #125666; 
+  text-decoration: underline; 
+}
+
+
+.custom-button-programmer {
+  background-color: #1d899a; 
+  border-color: #1d899a;
+  color: white;
+}
+
+.custom-button-client {
+  background-color: #1d899a; 
+  border-color: #1d899a;
+  color: white;
+}
+
+.custom-button-programmer:hover,
+.custom-button-client:hover {
+  opacity: 0.8;
+}

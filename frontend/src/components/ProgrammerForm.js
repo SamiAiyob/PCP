@@ -223,7 +223,7 @@ const ProgrammerForm = () => {
                         <CFormFeedback invalid>You must agree before submitting.</CFormFeedback>
                     </CCol>
                     <CCol xs={12}>
-                        <CButton style={{ backgroundColor: '#1d899a' }} type="submit">Submit form</CButton>
+                        <CButton style={{ backgroundColor: '#1d899a', color: 'white'}} type="submit">Submit form</CButton>
                     </CCol>
                 </CForm>
             )}

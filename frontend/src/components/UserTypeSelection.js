@@ -18,10 +18,10 @@ const UserTypeSelection = () => {
       <CRow className="justify-content-center">
         <CCol md={6} className="text-center">
           <h1>Select User Type</h1>
-          <CButton onClick={() => handleUserTypeSelection('programmer')} color="primary" className="m-2">Programmer</CButton>
-          <CButton onClick={() => handleUserTypeSelection('client')} color="secondary" className="m-2">Client</CButton>
+          <CButton onClick={() => handleUserTypeSelection('programmer')} className="custom-button-programmer m-2">Programmer</CButton>
+          <CButton onClick={() => handleUserTypeSelection('client')} className="custom-button-client m-2">Client</CButton>
           <p className="mt-3">
-            Already have an account? <Link to="/login">Login here</Link>
+            Already have an account? <Link to="/login"className="custom-link">Login here</Link>
           </p>
         </CCol>
       </CRow>
