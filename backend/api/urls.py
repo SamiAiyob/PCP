@@ -4,8 +4,8 @@ from .views import *
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet)
-router.register(r'programmers', ProgrammerViewSet)
-router.register(r'clients', ClientViewSet)
+router.register(r'programmers', ProgrammerViewSet, basename='programmer')
+router.register(r'clients', ClientViewSet, basename='client')
 
 urlpatterns = [
     path("", include(router.urls)),

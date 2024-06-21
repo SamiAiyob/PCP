@@ -15,6 +15,7 @@ import {
 } from '@coreui/react';
 import Search from './search';
 import '../App.css';
+import { Link } from 'react-router-dom';
 
 const menuItems = [
   {
@@ -63,8 +64,10 @@ const Navbar = ({ visible, setVisible }) => {
   return (
     <CNavbar expand="lg" className="bg-body-tertiary">
       <CContainer fluid>
-        <CNavbarBrand href="#">
+        <CNavbarBrand>
+        <Link to="/">
           <img src="/static/d.png" alt="" style={{ maxHeight: '100px' }} />
+          </Link>
         </CNavbarBrand>
         <CNavbarToggler onClick={() => setVisible(!visible)} />
         <CCollapse className="navbar-collapse" visible={visible}>

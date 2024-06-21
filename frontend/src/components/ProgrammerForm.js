@@ -57,22 +57,28 @@ const ProgrammerForm = () => {
         e.preventDefault();
         const form = new FormData();
 
-        // Append user data as a nested object
-        const user = {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-        };
-
-        form.append('user', JSON.stringify(user)); // Append user object as JSON string
+        // Append user data individually
+        form.append('user.name', formData.name);
+        form.append('user.email', formData.email);
+        form.append('user.password', formData.password);
 
         // Append other form data
-        for (let key in formData) {
-            if (key !== 'name' && key !== 'email' && key !== 'password') {
-                if (formData[key] !== null) {
-                    form.append(key, formData[key]);
-                }
-            }
+        form.append('phone_number', formData.phone_number);
+        form.append('address', formData.address);
+        form.append('experience', formData.experience);
+        form.append('rate', formData.rate);
+        form.append('category_id', formData.category_id);
+        form.append('skills', formData.skills);
+        form.append('bio', formData.bio);
+
+        // Append profile picture if it exists
+        if (formData.profile_picture) {
+            form.append('profile_picture', formData.profile_picture);
+        }
+
+        // Append CV if it exists
+        if (formData.cv) {
+            form.append('cv', formData.cv);
         }
 
         try {
