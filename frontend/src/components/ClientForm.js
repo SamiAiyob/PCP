@@ -34,22 +34,19 @@ const ClientForm = () => {
         e.preventDefault();
         const form = new FormData();
 
-        // Append user data as a nested object
-        const user = {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-        };
-
-        form.append('user', JSON.stringify(user)); // Append user object as JSON string
+        // Append user data individually
+        form.append('user.name', formData.name);
+        form.append('user.email', formData.email);
+        form.append('user.password', formData.password);
 
         // Append other form data
-        for (let key in formData) {
-            if (key !== 'name' && key !== 'email' && key !== 'password') {
-                if (formData[key] !== null) {
-                    form.append(key, formData[key]);
-                }
-            }
+        form.append('phone_number', formData.phone_number);
+        form.append('address', formData.address);
+        form.append('bio', formData.bio);
+
+        // Append profile picture if it exists
+        if (formData.profile_picture) {
+            form.append('profile_picture', formData.profile_picture);
         }
 
         try {
@@ -58,10 +55,17 @@ const ClientForm = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+
             const clientId = response.data.id; // Assuming the response contains the new client's ID
-            navigate(`/client-profile/${clientId}`); // Redirect to the profile page
+
+            // Verify clientId is not undefined before navigating
+            if (clientId) {
+                navigate(`/client-profile/${clientId}`); // Redirect to the profile page
+            } else {
+                console.error('Client ID is undefined:', response.data);
+            }
         } catch (error) {
-            console.error(error);
+            console.error('Error submitting form:', error.response.data); // Log detailed error message
         }
     };
 
@@ -143,7 +147,7 @@ const ClientForm = () => {
                     <CFormFeedback invalid>You must agree before submitting.</CFormFeedback>
                 </CCol>
                 <CCol xs={12}>
-                    <CButton style={{ backgroundColor: '#1d899a', color: 'white'}}  type="submit">Submit form</CButton>
+                    <CButton style={{ backgroundColor: '#1d899a', color: 'white' }} type="submit">Submit form</CButton>
                 </CCol>
             </CForm>
         </div>

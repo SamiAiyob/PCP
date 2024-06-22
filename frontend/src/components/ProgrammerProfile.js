@@ -38,7 +38,11 @@ const ProgrammerProfile = () => {
     useEffect(() => {
         const fetchProgrammerData = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`);
+                const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
                 setProgrammerData(response.data);
                 setFormData({
                     name: response.data.user.name,
@@ -47,7 +51,7 @@ const ProgrammerProfile = () => {
                     address: response.data.address,
                     experience: response.data.experience,
                     rate: response.data.rate,
-                    category_id: response.data.category ? response.data.category.id : '',
+                    category_id: response.data.categories ? response.data.categories.id : '',
                     skills: response.data.skills,
                     bio: response.data.bio,
                     profile_picture: response.data.profile_picture,
@@ -67,7 +71,11 @@ const ProgrammerProfile = () => {
         const confirmDelete = window.confirm('Are you sure you want to delete your profile?');
         if (confirmDelete) {
             try {
-                await axios.delete(`http://127.0.0.1:8000/programmers/${id}/`);
+                await axios.delete(`http://127.0.0.1:8000/programmers/${id}/`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
                 navigate('/'); // Redirect to home or another page after deletion
             } catch (error) {
                 setError(error);
@@ -109,11 +117,16 @@ const ProgrammerProfile = () => {
             await axios.put(`http://127.0.0.1:8000/programmers/${id}/`, form, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                 },
             });
             setEditing(false);
             // Optionally refetch programmer data
-            const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`);
+            const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
             setProgrammerData(response.data);
         } catch (error) {
             console.error('Error response:', error.response.data); // Log server response

@@ -57,7 +57,7 @@ const Login = () => {
             <CButton type="submit" className="custom-button">Login</CButton>
           </CForm>
           <p className="mt-3">
-            Don't have an account? <Link to="/select-user-type"className="custom-link">Register here</Link>
+            Don't have an account? <Link to="/select-user-type" className="custom-link">Register here</Link>
           </p>
         </CCol>
       </CRow>

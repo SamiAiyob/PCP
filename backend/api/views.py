@@ -2,9 +2,11 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import AllowAny
 from .models import *
 from .serializer import *
 import jwt, datetime
+from django.contrib.auth import authenticate
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -15,48 +17,54 @@ class ProgrammerViewSet(viewsets.ModelViewSet):
     serializer_class = ProgrammerSerializer
 
     def create(self, request, *args, **kwargs):
-        data = request.data
-        #print(data)
+        data = request.data.copy()  # Convert QueryDict to a regular dictionary to make it mutable
+
+        # Extract and handle user data
         user_data = {
-                    'name':data['user.name'],
-                     'email':data['user.email'],
-                     'password':data['user.password']}
+            'name': data.get('user.name'),
+            'email': data.get('user.email'),
+            'password': data.get('user.password')
+        }
 
-        if not user_data:
-            return Response({"error": "User data is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not user_data['name'] or not user_data['email'] or not user_data['password']:
+            return Response({"error": "'name', 'email', and 'password' are required in 'user' data"}, status=status.HTTP_400_BAD_REQUEST)
 
+        data['user'] = user_data
 
-        programmer_data = data
-        #print(programmer_data)
+        # Handle the optional profile picture
+        if 'profile_picture' in request.FILES:
+            data['profile_picture'] = request.FILES['profile_picture']
 
-        category_id = programmer_data['category_id']
-
-        if category_id:
-            try:
-                category = Category.objects.get(pk=category_id)
-                #programmer_data['categories'] = category
-            except Category.DoesNotExist:
-                return Response({"error": "Category not found"}, status=status.HTTP_400_BAD_REQUEST)
-
-        programmer_serializer = ProgrammerSerializer(data=programmer_data)
+        programmer_serializer = self.get_serializer(data=data)
         programmer_serializer.is_valid(raise_exception=True)
         programmer = programmer_serializer.save()
 
-        category_name = category.name.lower()
-        if category_name == 'webdeveloper':
-            WebDeveloper.objects.create(programmer=programmer)
-        elif category_name == 'backenddeveloper':
-            BackEndDeveloper.objects.create(programmer=programmer)
-        elif category_name == 'networking':
-            Networking.objects.create(programmer=programmer)
-        elif category_name == 'ai/machinelearning':
-            MachineLearning.objects.create(programmer=programmer)
-        elif category_name == 'cloudservices':
-            CloudServices.objects.create(programmer=programmer)
-        elif category_name == 'admin/customersupport':
-            AdminCustomerSupport.objects.create(programmer=programmer)
+        # Handle category creation and association
+        category_id = data.get('category_id')
+        if category_id:
+            try:
+                category = Category.objects.get(pk=category_id)
+                category_name = category.name.lower()
+                if category_name == 'webdeveloper':
+                    WebDeveloper.objects.create(programmer=programmer)
+                elif category_name == 'backenddeveloper':
+                    BackEndDeveloper.objects.create(programmer=programmer)
+                elif category_name == 'networking':
+                    Networking.objects.create(programmer=programmer)
+                elif category_name == 'ai/machinelearning':
+                    MachineLearning.objects.create(programmer=programmer)
+                elif category_name == 'cloudservices':
+                    CloudServices.objects.create(programmer=programmer)
+                elif category_name == 'admin/customersupport':
+                    AdminCustomerSupport.objects.create(programmer=programmer)
+            except Category.DoesNotExist:
+                return Response({"error": "Category not found"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(programmer_serializer.data, status=status.HTTP_201_CREATED)
+        # Include the ID in the response
+        response_data = programmer_serializer.data
+        response_data['id'] = programmer.id
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
 
 class ClientViewSet(viewsets.ModelViewSet):
@@ -64,37 +72,44 @@ class ClientViewSet(viewsets.ModelViewSet):
     serializer_class = ClientSerializer
 
     def create(self, request, *args, **kwargs):
-        data = request.data # Convert QueryDict to mutable dictionary
+        data = request.data.copy()  # Convert QueryDict to a regular dictionary to make it mutable
 
+        # Extract and handle user data
         user_data = {
-                    'name':data['user.name'],
-                     'email':data['user.email'],
-                     'password':data['user.password']}
+            'name': data.get('user.name'),
+            'email': data.get('user.email'),
+            'password': data.get('user.password')
+        }
 
-        if not user_data:
-            return Response({"error": "User data is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not user_data['name'] or not user_data['email'] or not user_data['password']:
+            return Response({"error": "'name', 'email', and 'password' are required in 'user' data"}, status=status.HTTP_400_BAD_REQUEST)
 
-        client_data = data
-        
+        data['user'] = user_data
 
-        client_serializer = ClientSerializer(data=client_data)
+        # Handle the optional profile picture
+        if 'profile_picture' in request.FILES:
+            data['profile_picture'] = request.FILES['profile_picture']
+
+        client_serializer = self.get_serializer(data=data)
         client_serializer.is_valid(raise_exception=True)
         client = client_serializer.save()
 
-        return Response(client_serializer.data, status=status.HTTP_201_CREATED)
+        # Include the ID in the response
+        response_data = client_serializer.data
+        response_data['id'] = client.id
 
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
 
-        user = User.objects.filter(email=email).first()
+        # Use the authenticate method to verify email and password
+        user = authenticate(request, username=email, password=password)
 
         if user is None:
-            raise AuthenticationFailed('User not found!')
-        if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password!')
+            raise AuthenticationFailed('Please enter a correct email and password. Note that both fields may be case-sensitive.')
 
         payload = {
             'id': user.id,
@@ -106,12 +121,13 @@ class LoginView(APIView):
 
         user_type = 'client' if hasattr(user, 'client') else 'programmer'
 
-
         response = Response()
         response.set_cookie(key='jwt', value=token, httponly=True)
-        response.data = {'jwt': token,
-                         'user_type': user_type,
-                         'user_id': user.id }
+        response.data = {
+            'jwt': token,
+            'user_type': user_type,
+            'user_id': user.id
+        }
 
         return response
 
@@ -138,3 +154,14 @@ class LogoutView(APIView):
         response.delete_cookie('jwt')
         response.data = {'message': 'success logout'}
         return response
+
+class PublicProgrammerSearchView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        query = request.query_params.get('q', '')
+        if query:
+            programmers = Programmer.objects.filter(skills__icontains=query)
+            serializer = PublicProgrammerSerializer(programmers, many=True)
+            return Response(serializer.data)
+        return Response({"message": "No search query provided."}, status=400)

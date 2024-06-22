@@ -11,7 +11,11 @@ const ClientProfile = () => {
     useEffect(() => {
         const fetchClientData = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/clients/${id}/`);
+                const response = await axios.get(`http://127.0.0.1:8000/clients/${id}/`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
                 setClientData(response.data);
                 setLoading(false);
             } catch (error) {
