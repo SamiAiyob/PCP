@@ -26,6 +26,7 @@ const ProgrammerList = () => {
   }, []);
 
   const handleSeeMore = (id) => {
+    console.log('Navigating to programmer profile with ID:', id); // Debugging
     const token = localStorage.getItem('access_token');
     if (token) {
       navigate(`/programmer-profile/${id}`);
@@ -45,7 +46,7 @@ const ProgrammerList = () => {
         <div className="row">
           {programmers.map(programmer => (
             <div key={programmer.id} className="col-lg-4 col-md-6 mb-4">
-              <ProgrammerCard programmer={programmer} onSeeMore={() => handleSeeMore(programmer.id)} />
+              <ProgrammerCard programmer={programmer} onSeeMore={handleSeeMore} />
             </div>
           ))}
         </div>

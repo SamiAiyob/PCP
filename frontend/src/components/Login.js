@@ -23,6 +23,8 @@ const Login = () => {
       const userType = response.data.user_type;
       const userId = response.data.user_id;
 
+      console.log('User ID:', userId); // Debugging
+
       if (userType === 'programmer') {
         navigate(`/programmer-profile/${userId}`);
       } else if (userType === 'client') {
