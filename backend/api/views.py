@@ -66,6 +66,32 @@ class ProgrammerViewSet(viewsets.ModelViewSet):
 
         return Response(response_data, status=status.HTTP_201_CREATED)
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        data = request.data.copy()
+
+        # Extract and handle user data
+        user_data = {
+            'name': data.get('user.name', instance.user.name),
+            'email': data.get('user.email', instance.user.email)
+        }
+
+        if 'user.password' in data:
+            user_data['password'] = data.get('user.password')
+
+        data['user'] = user_data
+
+        # Handle the optional profile picture
+        if 'profile_picture' in request.FILES:
+            data['profile_picture'] = request.FILES['profile_picture']
+
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
 
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
@@ -105,7 +131,6 @@ class LoginView(APIView):
         email = request.data['email']
         password = request.data['password']
 
-        # Use the authenticate method to verify email and password
         user = authenticate(request, username=email, password=password)
 
         if user is None:
@@ -119,14 +144,25 @@ class LoginView(APIView):
 
         token = jwt.encode(payload, 'secret', algorithm='HS256')
 
-        user_type = 'client' if hasattr(user, 'client') else 'programmer'
+        # Determine if the user is a programmer or a client
+        try:
+            programmer = Programmer.objects.get(user=user)
+            user_type = 'programmer'
+            user_id = programmer.id
+        except Programmer.DoesNotExist:
+            try:
+                client = Client.objects.get(user=user)
+                user_type = 'client'
+                user_id = client.id
+            except Client.DoesNotExist:
+                raise AuthenticationFailed('User type not found.')
 
         response = Response()
         response.set_cookie(key='jwt', value=token, httponly=True)
         response.data = {
             'jwt': token,
             'user_type': user_type,
-            'user_id': user.id
+            'user_id': user_id
         }
 
         return response
