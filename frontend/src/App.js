@@ -4,6 +4,7 @@ import '@coreui/coreui/dist/css/coreui.min.css';
 import { MDBContainer } from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import './App.css';
 
 import Navbar from './components/Navbar';
@@ -17,6 +18,7 @@ import ClientProfile from './components/ClientProfile';
 import ProgrammerProfile from './components/ProgrammerProfile';
 import Login from './components/Login';
 import UserTypeSelection from './components/UserTypeSelection';
+import Footer from './components/footer'; // Import the footer
 
 function App() {
   const [visible, setVisible] = useState(false);
@@ -40,6 +42,7 @@ function App() {
             </Routes>
           </MDBContainer>
         </div>
+        <Footer /> {/* Add the footer here */}
       </div>
     </Router>
   );

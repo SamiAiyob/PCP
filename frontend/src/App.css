@@ -325,3 +325,37 @@ p {
 .custom-button-client:hover {
   opacity: 0.8;
 }
+/*  Footer */
+.text-center {
+  text-align: center;
+}
+
+.text-white {
+  color: white;
+}
+
+.bg-body-tertiary {
+  background-color: #f1f1f1;
+}
+
+.p-3 {
+  padding: 1rem;
+}
+
+.pt-4 {
+  padding-top: 1.5rem;
+}
+
+.m-1 {
+  margin: 0.25rem;
+}
+
+.text-dark {
+  color: #000;
+}
+
+@media (min-width: 768px) {
+  .d-lg-flex {
+    display: flex;
+  }
+}
