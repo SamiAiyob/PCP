@@ -11,6 +11,7 @@ import Navbar from './components/Navbar';
 import SearchResults from './components/SearchResults';
 import MarketingMessage from './components/MarketingMessage';
 import Categories from './components/Categories';
+import CategoryProgrammers from './components/CategoryProgrammers';
 import ProgrammerForm from './components/ProgrammerForm';
 import ProgrammerList from './components/ProgrammerList';
 import ClientForm from './components/ClientForm';
@@ -32,9 +33,10 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/search-results" element={<SearchResults />} />
+              <Route path="/category/:id" element={<CategoryProgrammers />} />
               <Route path="/register-programmer" element={<ProgrammerForm />} />
               <Route path="/programmer-profile/:id" element={<ProgrammerProfile />} />
-              <Route path="/programmer-list" element={<ProgrammerList />} />
+              <Route path="/programmer" element={<ProgrammerList />} />
               <Route path="/register-client" element={<ClientForm />} />
               <Route path="/client-profile/:id" element={<ClientProfile />} />
               <Route path="/login" element={<Login />} />

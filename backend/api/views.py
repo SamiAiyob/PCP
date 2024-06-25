@@ -12,6 +12,86 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+# class ProgrammerViewSet(viewsets.ModelViewSet):
+#     queryset = Programmer.objects.all()
+#     serializer_class = ProgrammerSerializer
+
+#     def create(self, request, *args, **kwargs):
+#         data = request.data.copy()  # Convert QueryDict to a regular dictionary to make it mutable
+
+#         # Extract and handle user data
+#         user_data = {
+#             'name': data.get('user.name'),
+#             'email': data.get('user.email'),
+#             'password': data.get('user.password')
+#         }
+
+#         if not user_data['name'] or not user_data['email'] or not user_data['password']:
+#             return Response({"error": "'name', 'email', and 'password' are required in 'user' data"}, status=status.HTTP_400_BAD_REQUEST)
+
+#         data['user'] = user_data
+
+#         # Handle the optional profile picture
+#         if 'profile_picture' in request.FILES:
+#             data['profile_picture'] = request.FILES['profile_picture']
+
+#         programmer_serializer = self.get_serializer(data=data)
+#         programmer_serializer.is_valid(raise_exception=True)
+#         programmer = programmer_serializer.save()
+
+#         # Handle category creation and association
+#         category_id = data.get('category_id')
+#         if category_id:
+#             try:
+#                 category = Category.objects.get(pk=category_id)
+#                 category_name = category.name.lower()
+#                 if category_name == 'webdeveloper':
+#                     WebDeveloper.objects.create(programmer=programmer)
+#                 elif category_name == 'backenddeveloper':
+#                     BackEndDeveloper.objects.create(programmer=programmer)
+#                 elif category_name == 'networking':
+#                     Networking.objects.create(programmer=programmer)
+#                 elif category_name == 'ai/machinelearning':
+#                     MachineLearning.objects.create(programmer=programmer)
+#                 elif category_name == 'cloudservices':
+#                     CloudServices.objects.create(programmer=programmer)
+#                 elif category_name == 'admin/customersupport':
+#                     AdminCustomerSupport.objects.create(programmer=programmer)
+#             except Category.DoesNotExist:
+#                 return Response({"error": "Category not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+#         # Include the ID in the response
+#         response_data = programmer_serializer.data
+#         response_data['id'] = programmer.id
+
+#         return Response(response_data, status=status.HTTP_201_CREATED)
+
+#     def update(self, request, *args, **kwargs):
+#         partial = kwargs.pop('partial', False)
+#         instance = self.get_object()
+#         data = request.data.copy()
+
+#         # Extract and handle user data
+#         user_data = {
+#             'name': data.get('user.name', instance.user.name),
+#             'email': data.get('user.email', instance.user.email)
+#         }
+
+#         if 'user.password' in data:
+#             user_data['password'] = data.get('user.password')
+
+#         data['user'] = user_data
+
+#         # Handle the optional profile picture
+#         if 'profile_picture' in request.FILES:
+#             data['profile_picture'] = request.FILES['profile_picture']
+
+#         serializer = self.get_serializer(instance, data=data, partial=partial)
+#         serializer.is_valid(raise_exception=True)
+#         self.perform_update(serializer)
+
+#         return Response(serializer.data)
+
 class ProgrammerViewSet(viewsets.ModelViewSet):
     queryset = Programmer.objects.all()
     serializer_class = ProgrammerSerializer
@@ -39,24 +119,13 @@ class ProgrammerViewSet(viewsets.ModelViewSet):
         programmer_serializer.is_valid(raise_exception=True)
         programmer = programmer_serializer.save()
 
-        # Handle category creation and association
+        # Handle category association
         category_id = data.get('category_id')
         if category_id:
             try:
                 category = Category.objects.get(pk=category_id)
-                category_name = category.name.lower()
-                if category_name == 'webdeveloper':
-                    WebDeveloper.objects.create(programmer=programmer)
-                elif category_name == 'backenddeveloper':
-                    BackEndDeveloper.objects.create(programmer=programmer)
-                elif category_name == 'networking':
-                    Networking.objects.create(programmer=programmer)
-                elif category_name == 'ai/machinelearning':
-                    MachineLearning.objects.create(programmer=programmer)
-                elif category_name == 'cloudservices':
-                    CloudServices.objects.create(programmer=programmer)
-                elif category_name == 'admin/customersupport':
-                    AdminCustomerSupport.objects.create(programmer=programmer)
+                programmer.categories = category
+                programmer.save()
             except Category.DoesNotExist:
                 return Response({"error": "Category not found"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -88,10 +157,25 @@ class ProgrammerViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(instance, data=data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+        programmer = serializer.save()
+
+        # Handle category association
+        category_id = data.get('category_id')
+        if category_id:
+            try:
+                category = Category.objects.get(pk=category_id)
+                programmer.categories = category
+                programmer.save()
+            except Category.DoesNotExist:
+                return Response({"error": "Category not found"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.data)
 
+    def list(self, request, *args, **kwargs):
+        category_id = request.query_params.get('category')
+        if category_id:
+            self.queryset = self.queryset.filter(categories__id=category_id)
+        return super().list(request, *args, **kwargs)
 
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()

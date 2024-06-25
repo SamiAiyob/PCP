@@ -1,9 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MDBContainer, MDBRow, MDBCol } from 'mdb-react-ui-kit';
 import { FaCode, FaLaptopCode, FaCloud, FaUserCog, FaRobot, FaDocker  } from 'react-icons/fa';
 import '../App.css'; // Import CSS file
 
 function Categories() {
+  const navigate = useNavigate();
+
   const categories = [
     {
       id: 1,
@@ -28,6 +31,7 @@ function Categories() {
       name: "DS/ML",
       buttonText: ["PyTorch", "TensorFlow", "Pandas"].join(", "),
       icon: <FaRobot />
+  
     },
     {
       id: 5,
@@ -44,8 +48,7 @@ function Categories() {
   ];
 
   const handleCategoryClick = (category) => {
-    console.log(`Category ${category.name} clicked`);
-    // Aquí puedes manejar la navegación a otra página si es necesario
+    navigate(`/category/${category.id}`);
   };
 
   return (
@@ -69,4 +72,3 @@ function Categories() {
 }
 
 export default Categories;
-
