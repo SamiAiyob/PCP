@@ -27,7 +27,7 @@ function CategoryProgrammers() {
   }, [id]);
 
   const handleSeeMore = (programmerId) => {
-    navigate(`/programmer/${programmerId}`);
+    navigate(`/programmer-profile/${programmerId}`);
   };
 
   if (loading) return <p>Loading...</p>;

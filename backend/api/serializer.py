@@ -24,48 +24,6 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
-# class ProgrammerSerializer(serializers.ModelSerializer):
-#     user = UserSerializer()
-#     profile_picture = serializers.ImageField(max_length=None, use_url=True, required=False)
-#     categories = CategorySerializer(read_only=True)
-#     category_id = serializers.PrimaryKeyRelatedField(
-#         queryset=Category.objects.all(), source='categories', write_only=True
-#     )
-
-#     class Meta:
-#         model = Programmer
-#         fields = ['user', 'phone_number', 'address', 'experience', 'rate', 'categories', 'category_id', 'skills', 'bio', 'profile_picture', 'cv']
-
-#     def create(self, validated_data):
-#         user_data = validated_data.pop('user')
-#         user_data['password'] = make_password(user_data['password'])  # Hash the password before saving
-#         user = User.objects.create(**user_data)
-#         programmer = Programmer.objects.create(user=user, **validated_data)
-#         return programmer
-
-#     def update(self, instance, validated_data):
-#         user_data = validated_data.pop('user', None)
-#         if user_data:
-#             user = instance.user
-#             user.name = user_data.get('name', user.name)
-#             user.email = user_data.get('email', user.email)
-#             if 'password' in user_data:
-#                 user.set_password(user_data['password'])  # Update the password correctly
-#             user.save()
-
-#         instance.phone_number = validated_data.get('phone_number', instance.phone_number)
-#         instance.address = validated_data.get('address', instance.address)
-#         instance.experience = validated_data.get('experience', instance.experience)
-#         instance.rate = validated_data.get('rate', instance.rate)
-#         instance.skills = validated_data.get('skills', instance.skills)
-#         instance.bio = validated_data.get('bio', instance.bio)
-#         instance.profile_picture = validated_data.get('profile_picture', instance.profile_picture)
-#         instance.cv = validated_data.get('cv', instance.cv)
-#         instance.categories = validated_data.get('categories', instance.categories)
-#         instance.save()
-
-#         return instance
-
 class ProgrammerSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     profile_picture = serializers.ImageField(max_length=None, use_url=True, required=False)
@@ -148,9 +106,9 @@ class PublicProgrammerSerializer(serializers.ModelSerializer):
         model = Programmer
         fields = ['name', 'skills', 'categories', 'profile_picture']
 
-class WebDeveloperSerializer(serializers.ModelSerializer):
+class FrontEndDeveloperSerializer(serializers.ModelSerializer):
     class Meta:
-        model = WebDeveloper
+        model = FrontEndDeveloper
         fields = '__all__'
 
 class BackEndDeveloperSerializer(serializers.ModelSerializer):
@@ -158,14 +116,14 @@ class BackEndDeveloperSerializer(serializers.ModelSerializer):
         model = BackEndDeveloper
         fields = '__all__'
 
-class NetworkingSerializer(serializers.ModelSerializer):
+class DevOpsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Networking
+        model = DevOps
         fields = '__all__'
 
-class MachineLearningSerializer(serializers.ModelSerializer):
+class Ds_MlSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MachineLearning
+        model = DS_ML
         fields = '__all__'
 
 class CloudServicesSerializer(serializers.ModelSerializer):
@@ -173,7 +131,7 @@ class CloudServicesSerializer(serializers.ModelSerializer):
         model = CloudServices
         fields = '__all__'
 
-class AdminCustomerSupportSerializer(serializers.ModelSerializer):
+class SysAdminSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AdminCustomerSupport
+        model = SysAdmin
         fields = '__all__'

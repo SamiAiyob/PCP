@@ -1,6 +1,8 @@
 import React from 'react';
 
 const ProgrammerCard = ({ programmer, onSeeMore }) => {
+  console.log('Programmer in ProgrammerCard:', programmer); // Debugging
+
   const profilePicture = programmer.profile_picture
     ? programmer.profile_picture
     : 'http://127.0.0.1:8000/media/programmer_pictures/default_image.jpg';
@@ -27,7 +29,10 @@ const ProgrammerCard = ({ programmer, onSeeMore }) => {
         <button
           className="btn btn-primary w-100"
           style={{ backgroundColor: '#1d899a', color: '#fff', border: 'none' }}
-          onClick={() => onSeeMore(programmer.id)}
+          onClick={() => {
+            console.log('Clicked programmer id:', programmer.user.id); // Debugging
+            onSeeMore(programmer.user.id);
+          }}
         >
           See more
         </button>
