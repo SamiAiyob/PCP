@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CSpinner, CAlert, CButton, CForm, CFormLabel, CFormInput, CFormTextarea } from '@coreui/react';
+import { CSpinner, CAlert, CButton, CForm, CFormLabel, CFormInput, CFormTextarea, CFormSelect } from '@coreui/react';
 import './ProgrammerProfile.css';
 
 const ProgrammerProfile = () => {
-  const { id } = useParams(); // Retrieve programmer ID from URL params
+  const { id } = useParams();
   const navigate = useNavigate();
   const [programmerData, setProgrammerData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,11 +29,13 @@ const ProgrammerProfile = () => {
   useEffect(() => {
     const fetchProgrammerData = async () => {
       try {
+        console.log(`Fetching data for programmer with ID: ${id}`);
         const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         });
+        console.log('Programmer data fetched successfully:', response.data);
         setProgrammerData(response.data);
         setFormData({
           name: response.data.user.name,
@@ -49,12 +52,27 @@ const ProgrammerProfile = () => {
         });
         setLoading(false);
       } catch (error) {
+        console.error('Error fetching programmer data:', error);
         setError(error);
         setLoading(false);
       }
     };
 
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/categories/', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
     fetchProgrammerData();
+    fetchCategories();
   }, [id]);
 
   const handleDelete = async () => {
@@ -66,7 +84,7 @@ const ProgrammerProfile = () => {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         });
-        navigate('/'); // Redirect to home or another page after deletion
+        navigate('/');
       } catch (error) {
         setError(error);
       }
@@ -93,7 +111,7 @@ const ProgrammerProfile = () => {
       email: formData.email,
     };
 
-    form.append('user', JSON.stringify(user)); // Append user object as JSON string
+    form.append('user', JSON.stringify(user));
 
     for (let key in formData) {
       if (key !== 'name' && key !== 'email') {
@@ -111,7 +129,6 @@ const ProgrammerProfile = () => {
         },
       });
       setEditing(false);
-      // Optionally refetch programmer data
       const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -119,7 +136,7 @@ const ProgrammerProfile = () => {
       });
       setProgrammerData(response.data);
     } catch (error) {
-      console.error('Error response:', error.response.data); // Log server response
+      console.error('Error updating programmer data:', error.response.data);
       setError(error);
     }
   };
@@ -203,6 +220,22 @@ const ProgrammerProfile = () => {
                   min={1}
                   max={10}
                 />
+              </div>
+              <div className="mb-3">
+                <CFormLabel htmlFor="category_id">Category</CFormLabel>
+                <CFormSelect
+                  id="category_id"
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </CFormSelect>
               </div>
               <div className="mb-3">
                 <CFormLabel htmlFor="skills">Skills</CFormLabel>
