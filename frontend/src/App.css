@@ -1,6 +1,7 @@
 /* General Styles */
 .main-content {
   padding: 20px;
+  flex-grow: 1; /* Make sure this grows to push the footer down */
 }
 
 .marketing-message {
@@ -22,13 +23,13 @@
 }
 
 .uploaded-image {
-  max-width: 100%;
+  max-width: 70%;
   height: auto;
 }
 
 /* Categories Styles */
 .categories-container {
-  margin-top: 40px;
+  margin-top: 60px;
   text-align: center; /* Center the content */
 }
 
@@ -47,7 +48,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #806517;
+  background-color: #bea028;
   padding: 20px;
   border-radius: 10px;
   border: 1px solid #ccc;
@@ -59,7 +60,7 @@
 }
 
 .category-button:hover {
-  background-color: #a67c52;
+  background-color: #ceae2f;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Subtle shadow */
   transform: translateY(-5px); /* Slight lift effect */
 }
@@ -73,19 +74,18 @@
 .category-info h3 {
   font-size: 1.25rem;
   margin-bottom: 10px;
-  color: #282a2c;
+  color: #106372;
 }
 
 .category-info p {
   font-size: 1rem;
-  color: #282a2c;
+  color: #106372
 }
 
 /* Category Title */
 .categories-title {
-  font-size: 40px;
+  font-size: 50px;
   font-weight: 500;
-  font-family: 'Serif', sans-serif;
   color: #167d8f;
   margin-bottom: 100px;
 }
@@ -185,8 +185,7 @@
   align-items: center;
 }
 
-
-/*  card   */
+/* card */
 .card {
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -325,7 +324,8 @@ p {
 .custom-button-client:hover {
   opacity: 0.8;
 }
-/*  Footer */
+
+/* Footer */
 .text-center {
   text-align: center;
 }
@@ -354,8 +354,19 @@ p {
   color: #000;
 }
 
-@media (min-width: 768px) {
-  .d-lg-flex {
-    display: flex;
+/* Sticky Footer */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #1D899A;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+@media (min-height: 100vh) { /* Apply sticky footer only if the viewport height is at least 100vh */
+  .main-content {
+    margin-bottom: calc(100px + 10px); /* 100px for footer height + 10px for additional padding */
   }
 }

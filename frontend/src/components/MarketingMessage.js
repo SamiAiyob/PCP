@@ -3,6 +3,12 @@ import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Marketing01 from './static/Marketing01.jpeg';
+import Marketing03 from './static/Marketing03.jpeg';
+import Marketing04 from './static/Marketing04.jpeg';
+import Marketing06 from './static/Marketing06.jpeg';
+
+
 
 function MarketingMessage() {
   const settings = {
@@ -15,24 +21,24 @@ function MarketingMessage() {
 
   const slides = [
     {
-      title: "How work should work",
-      text: "Forget the old rules. You can have the best people. Right now. Right here.",
-      image: "https://www.careergirls.org/wp-content/uploads/2015/06/Computer_Programmer1920X10180.jpg"
+      title: "Finding the Right Programmer",
+      text: "Unlocking top talent starts here. Embrace innovation and secure the best minds for your projects, effortlessly.",
+      image: Marketing01
     },
     {
-      title: "Another great headline",
-      text: "Find the best talent for your projects in just a few clicks.",
-      image: "https://usa.bootcampcdn.com/wp-content/uploads/sites/106/2021/03/CDG_blog_post_image_02-850x412.jpg"
+      title: " Employment Situation",
+      text: "Streamline your hiring process and discover exceptional talent with ease, tailored to your project's needs.",
+      image: Marketing03
     },
     {
-      title: "Work efficiently",
-      text: "Optimize your workflow with the best tools available.",
-      image: "https://cdn3.f-cdn.com/files/download/97941784/programmin.jpg"
+      title: "Stay Secure",
+      text: "Safeguard your operations with state-of-the-art tools, ensuring optimal efficiency and peace of mind.",
+      image: Marketing06
     },
     {
-      title: "Collaboration at its best",
-      text: "Work with teams across the globe seamlessly.",
-      image: "https://kazokku.com/blog/wp-content/uploads/2023/06/apa-itu-programmer.webp"
+      title: "More Potential",
+      text: "Unlock global collaboration effortlessly, harnessing diverse teams for limitless possibilities.",
+      image: Marketing04
     }
   ];
 

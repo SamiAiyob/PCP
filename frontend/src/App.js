@@ -25,9 +25,9 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
+      <div className="d-flex flex-column min-vh-100"> {/* Updated class names */}
         <Navbar visible={visible} setVisible={setVisible} />
-        <div className="main-content">
+        <div className="flex-grow-1 main-content"> {/* Updated class names */}
           <MDBContainer>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -42,7 +42,7 @@ function App() {
             </Routes>
           </MDBContainer>
         </div>
-        <Footer /> {/* Add the footer here */}
+        <Footer /> {/* Footer is here */}
       </div>
     </Router>
   );
