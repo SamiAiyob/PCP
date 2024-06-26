@@ -1,10 +1,11 @@
 // components/Footer.js
 
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF, faTwitter, faGoogle, faInstagram, faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
   MDBFooter,
   MDBContainer,
-  MDBIcon,
   MDBBtn
 } from 'mdb-react-ui-kit';
 
@@ -19,10 +20,10 @@ const Footer = () => {
             floating
             size="lg"
             className='text-dark m-1'
-            href='#!'
+            href='#'
             role='button'
           >
-            <MDBIcon fab className='fab fa-facebook-f' />
+            <FontAwesomeIcon icon={faFacebookF} />
           </MDBBtn>
 
           <MDBBtn
@@ -31,10 +32,10 @@ const Footer = () => {
             floating
             size="lg"
             className='text-dark m-1'
-            href='#!'
+            href='#'
             role='button'
           >
-            <MDBIcon fab className='fa-twitter' />
+            <FontAwesomeIcon icon={faTwitter} />
           </MDBBtn>
 
           <MDBBtn
@@ -43,10 +44,10 @@ const Footer = () => {
             floating
             size="lg"
             className='text-dark m-1'
-            href='#!'
+            href='#'
             role='button'
           >
-            <MDBIcon fab className='fa-google' />
+            <FontAwesomeIcon icon={faGoogle} />
           </MDBBtn>
 
           <MDBBtn
@@ -55,10 +56,10 @@ const Footer = () => {
             floating
             size="lg"
             className='text-dark m-1'
-            href='#!'
+            href='#'
             role='button'
           >
-            <MDBIcon fab className='fa-instagram' />
+            <FontAwesomeIcon icon={faInstagram} />
           </MDBBtn>
 
           <MDBBtn
@@ -67,10 +68,10 @@ const Footer = () => {
             floating
             size="lg"
             className='text-dark m-1'
-            href='#!'
+            href='#'
             role='button'
           >
-            <MDBIcon fab className='fa-linkedin' />
+            <FontAwesomeIcon icon={faLinkedin} />
           </MDBBtn>
 
           <MDBBtn
@@ -79,10 +80,10 @@ const Footer = () => {
             floating
             size="lg"
             className='text-dark m-1'
-            href='#!'
+            href='#'
             role='button'
           >
-            <MDBIcon fab className='fa-github' />
+            <FontAwesomeIcon icon={faGithub} />
           </MDBBtn>
         </section>
       </MDBContainer>
@@ -98,3 +99,4 @@ const Footer = () => {
 };
 
 export default Footer;
+
