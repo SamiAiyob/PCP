@@ -27,13 +27,7 @@ const ProgrammerList = () => {
 
   const handleSeeMore = (id) => {
     console.log('Navigating to programmer profile with ID:', id); // Debugging
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      navigate(`/programmer-profile/${id}`);
-    } else {
-      alert('Please login to see the programmer details');
-      navigate('/login');
-    }
+    navigate(`/programmer-profile/${id}`);
   };
 
   if (loading) return <p>Loading...</p>;

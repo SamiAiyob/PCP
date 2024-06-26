@@ -4,14 +4,15 @@ import ProgrammerCard from './ProgrammerCard';
 
 const SearchResults = () => {
   const location = useLocation();
-  const { results } = location.state;
+  const { results } = location.state || { results: [] };
 
   return (
-    <div>
-      <h1>Search Results</h1>
-      <div className="results-container">
-        {results.map((programmer, index) => (
-          <ProgrammerCard key={index} programmer={programmer} />
+    <div className="container">
+      <div className="row">
+        {results.map((programmer) => (
+          <div className="col-md-4" key={programmer.id}>
+            <ProgrammerCard programmer={programmer} onSeeMore={(id) => console.log(`See more clicked for programmer ${id}`)} />
+          </div>
         ))}
       </div>
     </div>

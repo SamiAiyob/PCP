@@ -37,22 +37,22 @@ class Programmer(models.Model):
     def __str__(self):
         return self.user.email if self.user else 'No User'
 
-class WebDeveloper(models.Model):
+class FrontEndDeveloper(models.Model):
     programmer = models.OneToOneField(Programmer, on_delete=models.CASCADE)
 
 class BackEndDeveloper(models.Model):
     programmer = models.OneToOneField(Programmer, on_delete=models.CASCADE)
 
-class Networking(models.Model):
+class DevOps(models.Model):
     programmer = models.OneToOneField(Programmer, on_delete=models.CASCADE)
 
-class MachineLearning(models.Model):
+class DS_ML(models.Model):
     programmer = models.OneToOneField(Programmer, on_delete=models.CASCADE)
 
 class CloudServices(models.Model):
     programmer = models.OneToOneField(Programmer, on_delete=models.CASCADE)
 
-class AdminCustomerSupport(models.Model):
+class SysAdmin(models.Model):
     programmer = models.OneToOneField(Programmer, on_delete=models.CASCADE)
 
 class Client(models.Model):

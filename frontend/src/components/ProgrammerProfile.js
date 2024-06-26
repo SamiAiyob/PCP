@@ -217,8 +217,8 @@ const ProgrammerProfile = () => {
                   name="rate"
                   value={formData.rate}
                   onChange={handleChange}
-                  min={1}
-                  max={10}
+                  min={10}
+                  max={100}
                 />
               </div>
               <div className="mb-3">
@@ -283,6 +283,7 @@ const ProgrammerProfile = () => {
               <h2>{programmerData.user.name}</h2>
               <p><strong>Email:</strong> {programmerData.user.email}</p>
               <p><strong>Experience:</strong> {programmerData.experience} years</p>
+              <p><strong>Rate:</strong> ${programmerData.rate} per hour</p> {/* Displaying the rate */}
               <p><strong>Sector:</strong> {programmerData.categories ? programmerData.categories.name : 'N/A'}</p>
               <h3>Skills</h3>
               <p>{programmerData.skills}</p>
