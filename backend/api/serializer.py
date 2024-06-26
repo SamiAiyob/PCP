@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import *
 from django.contrib.auth.hashers import make_password
+from django.templatetags.static import static
+from django.conf import settings
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -100,11 +102,18 @@ class ClientSerializer(serializers.ModelSerializer):
         return instance
 
 class PublicProgrammerSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(source='user.username')
+    name = serializers.CharField(source='user.name')
+    categories = serializers.CharField(source='categories.name')
+    profile_picture = serializers.SerializerMethodField()
 
     class Meta:
         model = Programmer
-        fields = ['name', 'skills', 'categories', 'profile_picture']
+        fields = ['id', 'name', 'skills', 'categories', 'profile_picture']
+
+    def get_profile_picture(self, obj):
+        if obj.profile_picture:
+            return settings.MEDIA_URL + obj.profile_picture.name
+        return static('programmer_pictures/default_image.jpg')
 
 class FrontEndDeveloperSerializer(serializers.ModelSerializer):
     class Meta:
