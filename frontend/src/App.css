@@ -160,6 +160,9 @@
   background-color: #333;
   padding: 10px 20px;
   font-family: Arial, sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 /* Dropdown Styles */
@@ -167,52 +170,59 @@
   position: relative;
 }
 
-.nav-item .dropdown-menu {
+.dropdown-menu {
   display: none;
   position: absolute;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  top: 100%;
+  padding: 15px;
+  top: calc(100% + 10px);
   left: 0;
-  min-width: 300px; /* Ancho fijo para el menú desplegable */
+  min-width: 220px; /* Adjusted width for better fit */
   z-index: 1000;
+  border-radius: 5px;
 }
 
 .nav-item:hover .dropdown-menu {
   display: block;
 }
 
-.dropdown-item-content {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
+.dropdown-item {
+  cursor: pointer;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease;
 }
 
-.member-title, .product-title {
-  font-size: 1.5rem; /* Tamaño de fuente ajustado */
+.dropdown-item:hover {
+  background-color: #f0f0f0; /* Light gray background on hover */
+}
+
+.member-title,
+.product-title {
+  font-size: 1.2rem;
   font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.member-description, .product-description {
-  font-size: 1.2rem; /* Tamaño de fuente ajustado */
-  text-align: left;
-  margin-left: 20px;
-  flex: 3; /* Ajusta el ancho de la descripción */
+.member-description,
+.product-description {
+  font-size: 1rem;
+  color: #666; /* Slightly darker gray for description */
 }
 
 .dropdown-toggle {
   background-color: transparent;
   border: none;
-  color: rgb(3, 3, 3);
-  padding: 10px 50px;
+  color: #333;
+  padding: 10px 15px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .dropdown-toggle:hover,
 .dropdown-toggle:focus {
-  background-color: transparent;
-  /* color: #131212; */
+  color: #1d899a; /* Highlight color on hover/focus */
+  text-decoration: none;
 }
 
 .navbar-nav {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { CButton } from '@coreui/react';
 
 const Search = () => {
   const [query, setQuery] = useState('');
@@ -17,7 +18,7 @@ const Search = () => {
   };
 
   return (
-    <form onSubmit={handleSearch}>
+    <form onSubmit={handleSearch} style={styles.form}>
       <input
         type="text"
         value={query}
@@ -25,9 +26,27 @@ const Search = () => {
         placeholder="Search skills"
         required
       />
-      <button type="submit">Search</button>
+      <CButton type="submit" style={{backgroundColor: '#1d899a', color: 'white'}}>Search</CButton>
     </form>
   );
+};
+
+const styles = {
+  form: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  input: {
+    padding: '10px',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    fontSize: '16px',
+    marginRight: '5px',
+  },
+  button: {
+    color: '#106372',
+    marginTop: '0',
+  },
 };
 
 export default Search;

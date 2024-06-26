@@ -124,7 +124,9 @@ const Navbar = ({ visible, setVisible }) => {
             </CDropdown>
           </CNavbarNav>
           <CNavbarNav className="ms-auto">
-          <Search />
+            <Search />
+          </CNavbarNav>
+          <CNavbarNav className="ms-auto">
             <CDropdown>
               <CDropdownToggle color="secondary">Sign up</CDropdownToggle>
               <CDropdownMenu>
