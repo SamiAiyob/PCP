@@ -7,6 +7,7 @@ from .models import *
 from .serializer import *
 import jwt, datetime
 from django.contrib.auth import authenticate
+from django.core.mail import send_mail
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -202,7 +203,7 @@ class PublicProgrammerSearchView(APIView):
     def get(self, request):
         query = request.query_params.get('q', '')
         if query:
-            programmers = Programmer.objects.filter(skills__icontains=query)
+            programmers = Programmer.objects.filter(skills__icontains=query).select_related('user', 'categories')
             serializer = PublicProgrammerSerializer(programmers, many=True)
             return Response(serializer.data)
         return Response({"message": "No search query provided."}, status=400)

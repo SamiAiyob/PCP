@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CSpinner, CAlert, CButton, CForm, CFormLabel, CFormInput, CFormTextarea, CFormSelect } from '@coreui/react';
+import { CSpinner, CAlert, CButton } from '@coreui/react';
 import './ProgrammerProfile.css';
+import EditProgrammerProfile from './EditProgrammerProfile';
+import FeatureButton from './FeatureButton';
 
 const ProgrammerProfile = () => {
   const { id } = useParams();
@@ -29,13 +31,7 @@ const ProgrammerProfile = () => {
   useEffect(() => {
     const fetchProgrammerData = async () => {
       try {
-        console.log(`Fetching data for programmer with ID: ${id}`);
-        const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-          },
-        });
-        console.log('Programmer data fetched successfully:', response.data);
+        const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`);
         setProgrammerData(response.data);
         setFormData({
           name: response.data.user.name,
@@ -52,7 +48,6 @@ const ProgrammerProfile = () => {
         });
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching programmer data:', error);
         setError(error);
         setLoading(false);
       }
@@ -60,11 +55,7 @@ const ProgrammerProfile = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/categories/', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-          },
-        });
+        const response = await axios.get('http://127.0.0.1:8000/categories/');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -79,11 +70,7 @@ const ProgrammerProfile = () => {
     const confirmDelete = window.confirm('Are you sure you want to delete your profile?');
     if (confirmDelete) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/programmers/${id}/`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-          },
-        });
+        await axios.delete(`http://127.0.0.1:8000/programmers/${id}/`);
         navigate('/');
       } catch (error) {
         setError(error);
@@ -125,18 +112,12 @@ const ProgrammerProfile = () => {
       await axios.put(`http://127.0.0.1:8000/programmers/${id}/`, form, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
       });
       setEditing(false);
-      const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
+      const response = await axios.get(`http://127.0.0.1:8000/programmers/${id}/`);
       setProgrammerData(response.data);
     } catch (error) {
-      console.error('Error updating programmer data:', error.response.data);
       setError(error);
     }
   };
@@ -148,126 +129,14 @@ const ProgrammerProfile = () => {
     <div className="profile-container">
       <div className="profile-card">
         {editing ? (
-          <CForm onSubmit={handleSubmit}>
-            <div className="profile-picture">
-              {formData.profile_picture && (
-                <img
-                  src={formData.profile_picture}
-                  alt={`${formData.name}'s profile`}
-                  className="img-fluid rounded-circle"
-                />
-              )}
-            </div>
-            <div className="profile-details">
-              <div className="mb-3">
-                <CFormLabel htmlFor="name">Full Name</CFormLabel>
-                <CFormInput
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="email">Email</CFormLabel>
-                <CFormInput
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="phone_number">Phone Number</CFormLabel>
-                <CFormInput
-                  type="text"
-                  id="phone_number"
-                  name="phone_number"
-                  value={formData.phone_number}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="address">Address</CFormLabel>
-                <CFormInput
-                  type="text"
-                  id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="experience">Experience</CFormLabel>
-                <CFormInput
-                  type="number"
-                  id="experience"
-                  name="experience"
-                  value={formData.experience}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="rate">Rate</CFormLabel>
-                <CFormInput
-                  type="number"
-                  id="rate"
-                  name="rate"
-                  value={formData.rate}
-                  onChange={handleChange}
-                  min={10}
-                  max={100}
-                />
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="category_id">Category</CFormLabel>
-                <CFormSelect
-                  id="category_id"
-                  name="category_id"
-                  value={formData.category_id}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </CFormSelect>
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="skills">Skills</CFormLabel>
-                <CFormInput
-                  type="text"
-                  id="skills"
-                  name="skills"
-                  value={formData.skills}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="bio">Bio</CFormLabel>
-                <CFormTextarea
-                  id="bio"
-                  name="bio"
-                  value={formData.bio}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <CFormLabel htmlFor="cv">CV</CFormLabel>
-                <CFormInput
-                  type="file"
-                  id="cv"
-                  name="cv"
-                  onChange={handleFileChange}
-                />
-              </div>
-              <CButton type="submit" color="primary">Update</CButton>
-            </div>
-          </CForm>
+          <EditProgrammerProfile
+            formData={formData}
+            categories={categories}
+            handleChange={handleChange}
+            handleFileChange={handleFileChange}
+            handleSubmit={handleSubmit}
+            setEditing={setEditing}
+          />
         ) : (
           <>
             {programmerData.profile_picture && (
@@ -283,7 +152,7 @@ const ProgrammerProfile = () => {
               <h2>{programmerData.user.name}</h2>
               <p><strong>Email:</strong> {programmerData.user.email}</p>
               <p><strong>Experience:</strong> {programmerData.experience} years</p>
-              <p><strong>Rate:</strong> ${programmerData.rate} per hour</p> {/* Displaying the rate */}
+              <p><strong>Rate:</strong> ${programmerData.rate} per hour</p>
               <p><strong>Sector:</strong> {programmerData.categories ? programmerData.categories.name : 'N/A'}</p>
               <h3>Skills</h3>
               <p>{programmerData.skills}</p>
@@ -295,6 +164,8 @@ const ProgrammerProfile = () => {
               <div className="profile-buttons">
                 <CButton color="info" onClick={handleEdit} className="me-2">Edit Profile</CButton>
                 <CButton color="danger" onClick={handleDelete}>Delete Profile</CButton>
+                <FeatureButton />
+                {/* <CButton color="primary" href="#">Leave a message </CButton> */}
               </div>
             </div>
           </>
