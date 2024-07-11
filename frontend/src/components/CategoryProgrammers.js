@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { MDBContainer, MDBRow } from 'mdb-react-ui-kit';
-import axios from 'axios';
-import ProgrammerCard from './ProgrammerCard';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { MDBContainer, MDBRow } from "mdb-react-ui-kit";
+import axiosInstance from "../services/api";
+import ProgrammerCard from "./ProgrammerCard";
 
 function CategoryProgrammers() {
   const { id } = useParams();
@@ -14,10 +14,12 @@ function CategoryProgrammers() {
   useEffect(() => {
     const fetchProgrammers = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/programmers/?category=${id}`);
+        const response = await axiosInstance.get(
+          `/programmers/?category=${id}`,
+        );
         setProgrammers(response.data);
       } catch (error) {
-        setError('Error fetching programmers');
+        setError("Error fetching programmers");
       } finally {
         setLoading(false);
       }
@@ -37,8 +39,12 @@ function CategoryProgrammers() {
     <MDBContainer>
       <h2>Programmers in Category</h2>
       <MDBRow>
-        {programmers.map(programmer => (
-          <ProgrammerCard key={programmer.id} programmer={programmer} onSeeMore={handleSeeMore} />
+        {programmers.map((programmer) => (
+          <ProgrammerCard
+            key={programmer.id}
+            programmer={programmer}
+            onSeeMore={handleSeeMore}
+          />
         ))}
       </MDBRow>
     </MDBContainer>

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import ProgrammerCard from './ProgrammerCard';
+import React, { useState, useEffect } from "react";
+import axiosInstance from "../services/api";
+import { useNavigate } from "react-router-dom";
+import ProgrammerCard from "./ProgrammerCard";
 
 const ProgrammerList = () => {
   const [programmers, setProgrammers] = useState([]);
@@ -12,11 +12,11 @@ const ProgrammerList = () => {
   useEffect(() => {
     const fetchProgrammers = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/programmers/');
+        const response = await axiosInstance.get("/programmers/");
         setProgrammers(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching programmers:', error);
+        console.error("Error fetching programmers:", error);
         setError(error);
         setLoading(false);
       }
@@ -26,7 +26,7 @@ const ProgrammerList = () => {
   }, []);
 
   const handleSeeMore = (id) => {
-    console.log('Navigating to programmer profile with ID:', id); // Debugging
+    console.log("Navigating to programmer profile with ID:", id); // Debugging
     navigate(`/programmer-profile/${id}`);
   };
 
@@ -38,9 +38,12 @@ const ProgrammerList = () => {
       <h1 className="text-center mt-4 mb-4">List of Programmers</h1>
       <div className="container mt-4">
         <div className="row">
-          {programmers.map(programmer => (
+          {programmers.map((programmer) => (
             <div key={programmer.id} className="col-lg-4 col-md-6 mb-4">
-              <ProgrammerCard programmer={programmer} onSeeMore={handleSeeMore} />
+              <ProgrammerCard
+                programmer={programmer}
+                onSeeMore={handleSeeMore}
+              />
             </div>
           ))}
         </div>
