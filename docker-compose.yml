@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: ./backend/
+    container_name: django_pcp
+    restart: unless-stopped
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "127.0.0.1:8000:8000"
+  frontend:
+    build: ./frontend/
+    container_name: react_pcp
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      - backend

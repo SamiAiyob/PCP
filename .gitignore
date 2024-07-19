@@ -20,3 +20,6 @@ yarn-debug.log*
 yarn-error.log*
 .env
 virtualenv
+__pycache__
+node_modules
+build
