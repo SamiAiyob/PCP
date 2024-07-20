@@ -21,7 +21,7 @@ const ProgrammerCard = ({ programmer, onSeeMore }) => {
           alt={userName ? userName : "Programmer"}
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = `${process.env.REACT_APP_API_BASE_URL}/media/programmer_pictures/default_image.jpg`;
+            e.target.src = ``;
           }}
         />
       </div>
