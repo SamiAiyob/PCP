@@ -1,13 +1,13 @@
 services:
   backend:
-    build: ./backend/
+    image: mmayss/pcp_server
     container_name: django_pcp
     restart: unless-stopped
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "127.0.0.1:8000:8000"
   frontend:
-    build: ./frontend/
+    image: mmayss/pcp_web
     container_name: react_pcp
     restart: unless-stopped
     ports:
