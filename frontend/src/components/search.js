@@ -1,7 +1,7 @@
+import { CButton } from "@coreui/react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { CButton } from "@coreui/react";
+import axiosInstance from "../services/api";
 
 const Search = () => {
   const [query, setQuery] = useState("");
@@ -10,8 +10,8 @@ const Search = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(
-        `http://localhost:8000/api/public-search/?q=${query}`,
+      const response = await axiosInstance.get(
+        `public-search/?q=${query}`,
       );
       navigate("/search-results", { state: { results: response.data } });
     } catch (error) {

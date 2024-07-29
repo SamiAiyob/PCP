@@ -1,4 +1,5 @@
 from rest_framework import serializers
+import os
 from .models import *
 from django.contrib.auth.hashers import make_password
 from django.templatetags.static import static
@@ -111,10 +112,11 @@ class PublicProgrammerSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'skills', 'categories', 'profile_picture']
 
     def get_profile_picture(self, obj):
+        host = os.getenv("BASE_URL")
         #print(f"Object in get_profile_picture: {type(obj)}")  # Debugging line
         if obj.profile_picture.name:
             #print(f"Profile picture URL: {settings.MEDIA_URL}{obj.profile_picture.name}")  # Debugging line
-            return f"http://127.0.0.1:8000/{settings.MEDIA_URL}{obj.profile_picture.name}"
+            return f"{host}/{settings.MEDIA_URL}{obj.profile_picture.name}"
         return static('programmer_pictures/default_image.jpg')
 
 class FrontEndDeveloperSerializer(serializers.ModelSerializer):
